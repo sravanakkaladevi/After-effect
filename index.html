@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kinetic Text Studio – 60s to 3min Animations</title>
+  <meta name="description" content="Generate kinetic text animations with custom speed control, forward/backward scrubbing, play/pause, and yellow glow." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&family=Montserrat:wght@600;800;900&family=Outfit:wght@600;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- Floating Toggle Button (shown when sidebar is closed) -->
+    <button id="toggle-studio-btn" class="studio-toggle-btn" aria-label="Open Script Studio">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 20h9"></path>
+        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+      </svg>
+      <span>Script Studio</span>
+    </button>
+
+    <!-- Script Studio Panel (Left Docked Sidebar) -->
+    <aside id="studio-panel" class="studio-panel" aria-label="Kinetic Script Studio">
+      <div class="studio-header">
+        <div class="studio-header-title">
+          <div class="badge">PRO</div>
+          <h2>Script Studio</h2>
+        </div>
+        <button id="close-studio-btn" class="close-btn" aria-label="Close studio" title="Collapse sidebar">✕</button>
+      </div>
+
+      <p class="studio-subtitle">
+        Paste any script. Duration & scene reading speeds auto-adjust based on word count.
+      </p>
+
+      <!-- Target Duration & Auto-Pacing Control -->
+      <div class="field-group">
+        <div class="field-label-row">
+          <label for="duration-slider">Target Duration</label>
+          <div class="duration-meta-wrap">
+            <button type="button" id="auto-duration-btn" class="auto-calc-btn active" title="Automatically calculate duration and speed from script length">
+              ⚡ Auto Time
+            </button>
+            <span id="duration-badge" class="duration-badge">Auto (Based on Text)</span>
+          </div>
+        </div>
+        <input type="range" id="duration-slider" min="15" max="180" step="1" value="60" />
+        <div class="preset-pills">
+          <button type="button" class="pill-btn active" data-sec="auto" id="auto-pill-btn">⚡ Auto Pace</button>
+          <button type="button" class="pill-btn" data-sec="60">60s (1m)</button>
+          <button type="button" class="pill-btn" data-sec="120">120s (2m)</button>
+          <button type="button" class="pill-btn" data-sec="180">180s (3m)</button>
+        </div>
+      </div>
+
+      <!-- Animation Style Selector (6 Animation Styles) -->
+      <div class="field-group">
+        <div class="field-label-row">
+          <label>Animation Style (6 Styles)</label>
+          <span id="anim-style-badge" class="style-badge">Slide Up</span>
+        </div>
+        <div class="anim-style-grid">
+          <button type="button" class="style-btn active" data-anim="slide-up">Slide Up</button>
+          <button type="button" class="style-btn" data-anim="typewriter">Typewriter</button>
+          <button type="button" class="style-btn" data-anim="pop-zoom">Pop Zoom</button>
+          <button type="button" class="style-btn" data-anim="blur-focus">Blur Focus</button>
+          <button type="button" class="style-btn" data-anim="flip-3d">3D Flip</button>
+          <button type="button" class="style-btn" data-anim="glitch">Glitch</button>
+        </div>
+      </div>
+
+      <!-- Typography / Font Style Selector -->
+      <div class="field-group">
+        <div class="field-label-row">
+          <label>Custom Font Style</label>
+          <span id="font-style-badge" class="style-badge">Inter</span>
+        </div>
+        <div class="font-style-grid">
+          <button type="button" class="font-btn active" data-font="Inter" style="font-family:'Inter',sans-serif">Inter</button>
+          <button type="button" class="font-btn" data-font="Outfit" style="font-family:'Outfit',sans-serif">Outfit</button>
+          <button type="button" class="font-btn" data-font="JetBrains Mono" style="font-family:'JetBrains Mono',monospace">JetBrains</button>
+          <button type="button" class="font-btn" data-font="Montserrat" style="font-family:'Montserrat',sans-serif">Montserrat</button>
+        </div>
+      </div>
+
+      <!-- Canvas Aspect Ratio Selector (Supports range from 1.91:1 to 9:16) -->
+      <div class="field-group">
+        <div class="field-label-row">
+          <label>Aspect Ratio (1.91:1 to 9:16)</label>
+          <span id="aspect-ratio-badge" class="style-badge">9:16 Vertical</span>
+        </div>
+        <div class="aspect-ratio-grid">
+          <button type="button" class="ratio-btn active" data-ratio="9:16" title="9:16 Vertical (Reels, TikTok, Shorts)">
+            <span class="ratio-box icon-9-16"></span>
+            <span>9:16</span>
+          </button>
+          <button type="button" class="ratio-btn" data-ratio="4:5" title="4:5 Portrait (Instagram Feed)">
+            <span class="ratio-box icon-4-5"></span>
+            <span>4:5</span>
+          </button>
+          <button type="button" class="ratio-btn" data-ratio="1:1" title="1:1 Square (Feed Post)">
+            <span class="ratio-box icon-1-1"></span>
+            <span>1:1</span>
+          </button>
+          <button type="button" class="ratio-btn" data-ratio="16:9" title="16:9 Landscape (YouTube)">
+            <span class="ratio-box icon-16-9"></span>
+            <span>16:9</span>
+          </button>
+          <button type="button" class="ratio-btn" data-ratio="1.91:1" title="1.91:1 Widescreen (Twitter / Meta)">
+            <span class="ratio-box icon-191-1"></span>
+            <span>1.91:1</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Custom Speed Control in Studio Panel -->
+      <div class="field-group">
+        <div class="field-label-row">
+          <label for="studio-custom-speed-slider">Custom Playback Speed</label>
+          <span id="studio-speed-badge" class="speed-badge">1.00x</span>
+        </div>
+        <div class="custom-speed-slider-container">
+          <input type="range" id="studio-custom-speed-slider" min="0.25" max="3.0" step="0.05" value="1.0" />
+        </div>
+        <div class="speed-pills-row">
+          <button type="button" class="speed-pill-btn" data-speed="0.5">0.5x Slow</button>
+          <button type="button" class="speed-pill-btn active" data-speed="1.0">1.0x Normal</button>
+          <button type="button" class="speed-pill-btn" data-speed="1.5">1.5x Fast</button>
+          <button type="button" class="speed-pill-btn" data-speed="2.0">2.0x Double</button>
+        </div>
+      </div>
+
+      <!-- Script Textarea + Formatting Bar -->
+      <div class="field-group expand">
+        <div class="field-label-row">
+          <div class="label-with-stats">
+            <label for="script-input">Custom Script</label>
+            <span id="script-stats-badge" class="stats-badge">0 words • ~0s</span>
+          </div>
+          <button type="button" id="highlight-yellow-btn" class="yellow-glow-tool-btn" title="Wrap selected text in *text* to glow in neon yellow">
+            ✨ Yellow Glow (*text*)
+          </button>
+        </div>
+        <textarea id="script-input" spellcheck="false" placeholder="Paste your script here...&#10;&#10;Separate scenes with a blank line.&#10;Duration & speed auto-adjust based on text length!&#10;Wrap words in *word* to glow in vibrant yellow!"></textarea>
+      </div>
+
+      <div class="hints-box">
+        <p>⚡ <strong>Controls</strong>: Drag the top line forward/backward to seek. Use -5s / +5s or Arrow keys (← / →). Use Spacebar to Play/Pause.</p>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="studio-actions">
+        <button id="animate-btn" class="primary-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+          Animate Script
+        </button>
+        <button id="reset-preset-btn" class="secondary-btn">Reset MCP Preset</button>
+      </div>
+    </aside>
+
+    <!-- Stage Wrapper (9:16 Kinetic Video Canvas) -->
+    <section class="stage-section">
+      <main id="stage" class="ratio-9-16" tabindex="0" aria-label="Kinetic text animation canvas">
+        <div id="scenes-container">
+          <!-- Scenes rendered here dynamically -->
+          <section class="scene" data-start="0" data-end="3.5">
+            <p class="line yellow" style="--size:76px" data-spacing="2">MCP</p>
+            <p class="line white" style="--size:40px">ante enti<span class="cyan">?</span></p>
+          </section>
+
+          <section class="scene" data-start="3.9" data-end="7.5">
+            <p class="line white" style="--size:26px">Oka simple example tho</p>
+            <p class="line white" style="--size:30px"><span class="count purple" data-to="60" style="--size:104px">60</span> seconds lo</p>
+            <p class="line cyan" style="--size:32px">explain chestha!</p>
+          </section>
+
+          <section class="scene" data-start="8.4" data-end="15.5" data-glow-at="12.8">
+            <p class="line white" style="--size:28px">MCP ante</p>
+            <p class="line white big-initial" style="--size:38px" data-delay="1.1"><span class="initial yellow">M</span>odel</p>
+            <p class="line white big-initial" style="--size:38px" data-delay="2.2"><span class="initial cyan">C</span>ontext</p>
+            <p class="line white big-initial" style="--size:38px" data-delay="3.3"><span class="initial purple">P</span>rotocol</p>
+          </section>
+        </div>
+
+        <!-- Video Player Overlay Controls (Enlarged & Enhanced) -->
+        <div class="player-controls" id="player-controls">
+          <!-- Timeline Scrubber Bar (Interactive forward & backward drag) -->
+          <div class="timeline-bar-wrap" id="timeline-bar-wrap" title="Drag forward or backward to seek">
+            <div class="timeline-bar" id="timeline-bar"></div>
+            <div class="timeline-thumb" id="timeline-thumb" title="Drag timeline forward / backward"></div>
+            <div class="timeline-tooltip" id="timeline-tooltip">0:00</div>
+          </div>
+
+          <div class="controls-row">
+            <!-- Left Group: Backward 5s, Play/Pause, Forward 5s, Time -->
+            <div class="ctrl-group-left">
+              <button id="step-back-btn" class="ctrl-btn step-btn" title="Backward 5s (← key)" aria-label="Step backward 5 seconds">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="11 19 2 12 11 5 11 19"></polygon>
+                  <polygon points="22 19 13 12 22 5 22 19"></polygon>
+                </svg>
+                <span>-5s</span>
+              </button>
+
+              <button id="play-pause-btn" class="ctrl-btn play-pause-btn" aria-label="Play or Pause (Space)">
+                <span id="play-pause-icon">⏸</span>
+                <span id="play-pause-text">Pause</span>
+              </button>
+
+              <button id="step-fwd-btn" class="ctrl-btn step-btn" title="Forward 5s (→ key)" aria-label="Step forward 5 seconds">
+                <span>+5s</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="13 19 22 12 13 5 13 19"></polygon>
+                  <polygon points="2 19 11 12 2 5 2 19"></polygon>
+                </svg>
+              </button>
+
+              <span id="time-display" class="time-display">0:00 / 1:00</span>
+            </div>
+
+            <!-- Right Group: Custom Speed & Replay & Download -->
+            <div class="ctrl-group-right">
+              <!-- Quick Speed Selector + Custom Speed Popover -->
+              <div class="speed-controls" id="speed-controls">
+                <button type="button" class="speed-btn" data-speed="0.5">0.5x</button>
+                <button type="button" class="speed-btn active" data-speed="1.0">1x</button>
+                <button type="button" class="speed-btn" data-speed="1.5">1.5x</button>
+                <button type="button" class="speed-btn" data-speed="2.0">2x</button>
+                
+                <div class="player-custom-speed-wrapper">
+                  <button type="button" id="player-custom-speed-btn" class="speed-btn custom-pill" title="Custom speed slider">
+                    <span id="player-custom-speed-label">Custom</span>
+                  </button>
+                  <div class="custom-speed-popover" id="custom-speed-popover">
+                    <div class="popover-title">Custom Speed</div>
+                    <div class="speed-input-row">
+                      <input type="range" id="player-speed-range" min="0.25" max="3.0" step="0.05" value="1.0" />
+                      <span id="player-speed-val">1.00x</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Replay -->
+              <button id="replay-btn" class="ctrl-btn icon-only-btn" aria-label="Replay animation" title="Restart animation">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M2 8a6 6 0 0 1 10.3-4.2L11 5h4V1l-1.6 1.6A7.9 7.9 0 0 0 0 8h2Zm12 0a6 6 0 0 1-10.3 4.2L5 11H1v4l1.6-1.6A7.9 7.9 0 0 0 16 8h-2Z" fill="currentColor"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </section>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
